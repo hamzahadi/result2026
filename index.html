@@ -3,75 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>برنامج نتائج الطلاب</title>
+  <title>برنامج نتائج الطلاب 2026</title>
+
   <style>
     body {
       font-family: Tahoma, Arial, sans-serif;
       background: #f2f5f9;
+      margin: 0;
+      padding: 0;
       text-align: center;
     }
+
     .container {
       max-width: 500px;
-      margin: 80px auto;
+      margin: 60px auto;
       background: white;
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.15);
     }
-    input, button {
+
+    .logo {
+      width: 140px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+
+    h1 {
+      color: #1b4f72;
+      font-size: 26px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #444;
+    }
+
+    input {
       width: 90%;
       padding: 12px;
       font-size: 18px;
-      margin: 10px 0;
+      margin: 15px 0;
+      border: 1px solid #ccc;
       border-radius: 8px;
+      text-align: center;
     }
+
     button {
+      width: 90%;
+      padding: 12px;
+      font-size: 18px;
       background: #0078d4;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
+
+    button:hover {
+      background: #005ea8;
+    }
+
     #result {
       margin-top: 20px;
       font-size: 20px;
+      color: #333;
       font-weight: bold;
     }
-    a {
+
+    #result a {
       color: #0078d4;
       text-decoration: none;
     }
   </style>
 </head>
+
 <body>
 
-<div class="container">
-  <h1>برنامج نتائج الطلاب 2026</h1>
-  <p>أدخل رقم الطالب لمعرفة النتيجة</p>
+  <div class="container">
 
-  <input type="text" id="studentNumber" placeholder="مثال: 1024011130005">
-  <button onclick="searchResult()">بحث</button>
+    <img src="./X1.jpg" alt="شعار" class="logo">
 
-  <div id="result"></div>
-</div>
+    <h1>برنامج نتائج الطلاب 2026</h1>
 
-<script>
-function searchResult() {
-  var number = document.getElementById("studentNumber").value.trim();
-  var resultBox = document.getElementById("result");
+    <p>أدخل رقم الطالب لمعرفة النتيجة</p>
 
-  if (number === "") {
-    resultBox.innerHTML = "يرجى إدخال رقم الطالب";
-    return;
-  }
+    <input 
+      type="text" 
+      id="studentNumber" 
+      placeholder="مثال: 1024011130005"
+      maxlength="20"
+      onkeydown="if(event.key === 'Enter') searchResult();"
+    >
 
-  var pdfUrl =
-    "https://studentresults2026.blob.core.windows.net/student-results/"
-    + number + ".pdf";
+    <button onclick="searchResult()">بحث</button>
 
-  resultBox.innerHTML =
-    "<a href='" + pdfUrl + "' target='_blank'>اضغط هنا لعرض النتيجة</a>";
-}
-</script>
+    <div id="result"></div>
+
+  </div>
+
+  <script>
+    function searchResult() {
+      var number = document.getElementById("studentNumber").value.trim();
+      var resultBox = document.getElementById("result");
+
+      resultBox.innerHTML = "";
+
+      if (number === "") {
+        resultBox.innerHTML = "يرجى إدخال رقم الطالب";
+        return;
+      }
+
+      if (!/^[0-9]+$/.test(number)) {
+        resultBox.innerHTML = "رقم الطالب يجب أن يحتوي على أرقام فقط";
+        return;
+      }
+
+      var pdfUrl = "https://studentresults2026.blob.core.windows.net/student-results/" 
+                   + number + ".pdf";
+
+      resultBox.innerHTML =
+        "<a href='" + pdfUrl + "' target='_blank'>اضغط هنا لعرض النتيجة</a>";
+    }
+  </script>
 
 </body>
 </html>
