@@ -8,8 +8,6 @@
     body {
       font-family: Tahoma, Arial, sans-serif;
       background: #f2f5f9;
-      margin: 0;
-      padding: 0;
       text-align: center;
     }
     .container {
@@ -20,74 +18,60 @@
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0,0,0,0.15);
     }
-    h1 {
-      color: #1b4f72;
-    }
-    input {
+    input, button {
       width: 90%;
       padding: 12px;
       font-size: 18px;
-      margin: 15px 0;
-      border: 1px solid #ccc;
+      margin: 10px 0;
       border-radius: 8px;
-      text-align: center;
     }
     button {
-      padding: 12px 25px;
-      font-size: 18px;
       background: #0078d4;
       color: white;
       border: none;
-      border-radius: 8px;
       cursor: pointer;
-    }
-    button:hover {
-      background: #005ea8;
     }
     #result {
       margin-top: 20px;
       font-size: 20px;
-      color: #333;
       font-weight: bold;
+    }
+    a {
+      color: #0078d4;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>برنامج نتائج الطلاب 2026</h1>
-    <p>أدخل رقم الطالب لمعرفة النتيجة</p>
+<div class="container">
+  <h1>برنامج نتائج الطلاب 2026</h1>
+  <p>أدخل رقم الطالب لمعرفة النتيجة</p>
 
-    <input type="text" id="studentNumber" placeholder="مثال: 1024011130005">
-    <br>
-    <button onclick="searchResult()">بحث</button>
+  <input type="text" id="studentNumber" placeholder="مثال: 1024011130005">
+  <button onclick="searchResult()">بحث</button>
 
-    <div id="result"></div>
-  </div>
+  <div id="result"></div>
+</div>
 
-  <script>
-    const results = {
-      "1024011130005": "النتيجة: ناجح - المعدل: 85%",
-      "1001": "النتيجة: ناجح - المعدل: 90%",
-      "1002": "النتيجة: راسب - المعدل: 45%"
-    };
+<script>
+function searchResult() {
+  var number = document.getElementById("studentNumber").value.trim();
+  var resultBox = document.getElementById("result");
 
-    function searchResult() {
-      const number = document.getElementById("studentNumber").value.trim();
-      const resultBox = document.getElementById("result");
+  if (number === "") {
+    resultBox.innerHTML = "يرجى إدخال رقم الطالب";
+    return;
+  }
 
-      if (number === "") {
-        resultBox.innerHTML = "يرجى إدخال رقم الطالب";
-        return;
-      }
+  var pdfUrl =
+    "https://studentresults2026.blob.core.windows.net/student-results/"
+    + number + ".pdf";
 
-      if (results[number]) {
-        resultBox.innerHTML = results[number];
-      } else {
-        resultBox.innerHTML = "لم يتم العثور على نتيجة لهذا الرقم";
-      }
-    }
-  </script>
+  resultBox.innerHTML =
+    "<a href='" + pdfUrl + "' target='_blank'>اضغط هنا لعرض النتيجة</a>";
+}
+</script>
 
 </body>
 </html>
