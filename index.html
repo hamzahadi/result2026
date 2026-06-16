@@ -1,133 +1,140 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>برنامج نتائج الطلاب 2026</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتائج الطلاب المهني 2026</title>
 
-  <style>
-    body {
-      font-family: Tahoma, Arial, sans-serif;
-      background: #f2f5f9;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    .container {
-      max-width: 500px;
-      margin: 60px auto;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.15);
-    }
+body {
+  margin: 0;
+  padding: 0;
+  background: #f3f6fb;
+  font-family: Tahoma, Arial, sans-serif;
+}
 
-    .logo {
-      width: 140px;
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto 20px auto;
-    }
+.container {
+  width: 100%;
+  max-width: 500px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: white;
+  padding: 35px 20px;
+  text-align: center;
+}
 
-    h1 {
-      color: #1b4f72;
-      font-size: 26px;
-    }
+.logo {
+  width: 140px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
 
-    p {
-      font-size: 18px;
-      color: #444;
-    }
+h1 {
+  color: #0b5394;
+  font-size: 26px;
+  margin: 10px 0;
+}
 
-    input {
-      width: 90%;
-      padding: 12px;
-      font-size: 18px;
-      margin: 15px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      text-align: center;
-    }
+p {
+  color: #555;
+  font-size: 18px;
+}
 
-    button {
-      width: 90%;
-      padding: 12px;
-      font-size: 18px;
-      background: #0078d4;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+input {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  text-align: center;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  margin-top: 15px;
+}
 
-    button:hover {
-      background: #005ea8;
-    }
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  background: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
 
-    #result {
-      margin-top: 20px;
-      font-size: 20px;
-      color: #333;
-      font-weight: bold;
-    }
+button:hover {
+  background: #005ea8;
+}
 
-    #result a {
-      color: #0078d4;
-      text-decoration: none;
-    }
-  </style>
+#result {
+  margin-top: 25px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#result a {
+  color: #0078d4;
+  text-decoration: none;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <img src="./X1.jpg" alt="شعار" class="logo">
+  <img src="X1.jpg" alt="شعار" class="logo">
 
-    <h1>برنامج نتائج الطلاب 2026</h1>
+  <h1> نتائج الطلاب 2026</h1>
 
-    <p>أدخل رقم الطالب لمعرفة النتيجة</p>
+  <p>أدخل رقم الطالب لمعرفة النتيجة</p>
 
-    <input 
-      type="text" 
-      id="studentNumber" 
-      placeholder="مثال: 1024011130005"
-      maxlength="20"
-      onkeydown="if(event.key === 'Enter') searchResult();"
-    >
+  <input
+    type="text"
+    id="studentNumber"
+    placeholder="مثال: 1024011130005"
+    maxlength="13"
+    inputmode="numeric"
+    onkeydown="if(event.key === 'Enter') searchResult();"
+  >
 
-    <button onclick="searchResult()">بحث</button>
+  <button onclick="searchResult()">بحث</button>
 
-    <div id="result"></div>
+  <div id="result"></div>
 
-  </div>
+</div>
 
-  <script>
-    function searchResult() {
-      var number = document.getElementById("studentNumber").value.trim();
-      var resultBox = document.getElementById("result");
+<script>
+function searchResult() {
+  var studentNumber = document.getElementById("studentNumber").value.trim();
+  var resultBox = document.getElementById("result");
 
-      resultBox.innerHTML = "";
+  resultBox.innerHTML = "";
 
-      if (number === "") {
-        resultBox.innerHTML = "يرجى إدخال رقم الطالب";
-        return;
-      }
+  if (studentNumber === "") {
+    resultBox.innerHTML = "يرجى إدخال رقم الطالب";
+    return;
+  }
 
-      if (!/^[0-9]+$/.test(number)) {
-        resultBox.innerHTML = "رقم الطالب يجب أن يحتوي على أرقام فقط";
-        return;
-      }
+  if (!/^[0-9]+$/.test(studentNumber)) {
+    resultBox.innerHTML = "رقم الطالب يجب أن يحتوي على أرقام فقط";
+    return;
+  }
 
-      var pdfUrl = "https://studentresults2026.blob.core.windows.net/student-results/" 
-                   + number + ".pdf";
+  var pdfUrl =
+    "https://studentresults2026.blob.core.windows.net/student-results/" +
+    studentNumber +
+    ".pdf";
 
-      resultBox.innerHTML =
-        "<a href='" + pdfUrl + "' target='_blank'>اضغط هنا لعرض النتيجة</a>";
-    }
-  </script>
+  resultBox.innerHTML =
+    "<a href='" + pdfUrl + "' target='_blank'>عرض النتيجة PDF</a>";
+}
+</script>
 
 </body>
 </html>
