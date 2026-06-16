@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نتائج الطلبة المهني 2026 </title>
+<title>نتائج الطلبة المهني 2026</title>
 
 <style>
 * {
@@ -23,7 +23,7 @@ body {
   min-height: 100vh;
   margin: 0 auto;
   background: white;
-  padding: 35px 20px;
+  padding: 30px 20px;
   text-align: center;
 }
 
@@ -31,13 +31,13 @@ body {
   width: 140px;
   max-width: 100%;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 h1 {
   color: #0b5394;
-  font-size: 26px;
-  margin: 10px 0;
+  font-size: 22px;
+  margin: 8px 0;
 }
 
 p {
@@ -55,15 +55,20 @@ input {
   margin-top: 15px;
 }
 
-button {
-  width: 100%;
+.buttons {
+  display: flex;
+  gap: 10px;
   margin-top: 15px;
+}
+
+button {
+  flex: 1;
   padding: 14px;
   background: #0078d4;
   color: white;
   border: none;
   border-radius: 10px;
-  font-size: 18px;
+  font-size: 17px;
   cursor: pointer;
 }
 
@@ -71,15 +76,20 @@ button:hover {
   background: #005ea8;
 }
 
-#result {
-  margin-top: 25px;
-  font-size: 20px;
+#message {
+  margin-top: 18px;
+  font-size: 18px;
   font-weight: bold;
+  color: #333;
 }
 
-#result a {
-  color: #0078d4;
-  text-decoration: none;
+#pdfViewer {
+  width: 100%;
+  height: 650px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: none;
 }
 </style>
 </head>
@@ -89,9 +99,10 @@ button:hover {
 <div class="container">
 
   <img src="X1.jpg" alt="شعار" class="logo">
+
   <h1>وزارة التربية</h1>
   <h1>المديرية العامة للتعليم المهني</h1>
-  <h1> نتائج الطلاب المهني 2026</h1>
+  <h1>نتائج الطلاب المهني 2026</h1>
 
   <p>أدخل رقم الطالب لمعرفة النتيجة</p>
 
@@ -101,39 +112,69 @@ button:hover {
     placeholder="مثال: 1024011130005"
     maxlength="13"
     inputmode="numeric"
-    onkeydown="if(event.key === 'Enter') searchResult();"
   >
 
-  <button onclick="searchResult()">بحث</button>
+  <div class="buttons">
+    <button onclick="viewResult()">عرض النتيجة</button>
+    <button onclick="downloadResult()">تحميل النتيجة</button>
+  </div>
 
-  <div id="result"></div>
+  <div id="message"></div>
+
+  <iframe id="pdfViewer"></iframe>
 
 </div>
 
 <script>
-function searchResult() {
+function getPdfUrl() {
   var studentNumber = document.getElementById("studentNumber").value.trim();
-  var resultBox = document.getElementById("result");
+  var message = document.getElementById("message");
 
-  resultBox.innerHTML = "";
+  message.innerHTML = "";
 
   if (studentNumber === "") {
-    resultBox.innerHTML = "يرجى إدخال رقم الطالب";
-    return;
+    message.innerHTML = "يرجى إدخال رقم الطالب";
+    return null;
   }
 
   if (!/^[0-9]+$/.test(studentNumber)) {
-    resultBox.innerHTML = "رقم الطالب يجب أن يحتوي على أرقام فقط";
+    message.innerHTML = "رقم الطالب يجب أن يحتوي على أرقام فقط";
+    return null;
+  }
+
+  return "https://studentresults2026.blob.core.windows.net/student-results/" +
+         studentNumber +
+         ".pdf";
+}
+
+function viewResult() {
+  var pdfUrl = getPdfUrl();
+  var viewer = document.getElementById("pdfViewer");
+
+  if (pdfUrl === null) {
+    viewer.style.display = "none";
+    viewer.src = "";
     return;
   }
 
-  var pdfUrl =
-    "https://studentresults2026.blob.core.windows.net/student-results/" +
-    studentNumber +
-    ".pdf";
+  viewer.src = pdfUrl;
+  viewer.style.display = "block";
+}
 
-  resultBox.innerHTML =
-    "<a href='" + pdfUrl + "' target='_blank'>عرض النتيجة PDF</a>";
+function downloadResult() {
+  var pdfUrl = getPdfUrl();
+
+  if (pdfUrl === null) {
+    return;
+  }
+
+  var link = document.createElement("a");
+  link.href = pdfUrl;
+  link.download = "result.pdf";
+  link.target = "_blank";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 </script>
 
