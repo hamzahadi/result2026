@@ -229,7 +229,7 @@ async function viewResult() {
   setLoading(false);
 
   if (!exists) {
-    showMessage("لم يتم العثور على النتيجة أو تعذر الاتصال بالخادم", "red");
+    showMessage("تعذر الاتصال بالخادم او خطأ بالرقم الامتحاني", "red");
     return;
   }
 
