@@ -71,11 +71,24 @@ button:hover {
   background: #005ea8;
 }
 
+button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
 #message {
   margin-top: 18px;
   font-size: 18px;
   font-weight: bold;
   color: #333;
+}
+
+#loading {
+  display: none;
+  margin-top: 15px;
+  font-size: 18px;
+  color: #0b5394;
+  font-weight: bold;
 }
 
 #pdfPage {
@@ -119,11 +132,13 @@ button:hover {
     placeholder="مثال: 1024011130005"
     maxlength="13"
     inputmode="numeric"
+    autocomplete="off"
   >
 
-  <button onclick="viewResult()">عرض النتيجة</button>
-  <button onclick="downloadResult()">تحميل النتيجة</button>
+  <button id="viewBtn" onclick="viewResult()">عرض النتيجة</button>
+  <button id="downloadBtn" onclick="downloadResult()">تحميل النتيجة</button>
 
+  <div id="loading">جاري البحث عن النتيجة...</div>
   <div id="message"></div>
 
 </div>
@@ -134,31 +149,87 @@ button:hover {
 </div>
 
 <script>
-function getPdfUrl() {
-  var studentNumber = document.getElementById("studentNumber").value.trim();
-  var message = document.getElementById("message");
+const studentInput = document.getElementById("studentNumber");
+const message = document.getElementById("message");
+const loading = document.getElementById("loading");
+const viewBtn = document.getElementById("viewBtn");
+const downloadBtn = document.getElementById("downloadBtn");
 
-  message.innerHTML = "";
+studentInput.addEventListener("input", function () {
+  this.value = this.value.replace(/[^0-9]/g, "");
+});
+
+studentInput.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    viewResult();
+  }
+});
+
+function setLoading(status) {
+  loading.style.display = status ? "block" : "none";
+  viewBtn.disabled = status;
+  downloadBtn.disabled = status;
+}
+
+function showMessage(text, color = "#333") {
+  message.innerHTML = text;
+  message.style.color = color;
+}
+
+function getPdfUrl() {
+  const studentNumber = studentInput.value.trim();
+
+  showMessage("");
 
   if (studentNumber === "") {
-    message.innerHTML = "يرجى إدخال رقم الطالب";
+    showMessage("يرجى إدخال رقم الطالب", "red");
     return null;
   }
 
   if (!/^[0-9]+$/.test(studentNumber)) {
-    message.innerHTML = "رقم الطالب يجب أن يحتوي على أرقام فقط";
+    showMessage("رقم الطالب يجب أن يحتوي على أرقام فقط", "red");
+    return null;
+  }
+
+  if (studentNumber.length !== 13) {
+    showMessage("رقم الطالب يجب أن يتكون من 13 رقماً", "red");
     return null;
   }
 
   return "https://studentresults2026.blob.core.windows.net/student-results/" +
-         studentNumber +
+         encodeURIComponent(studentNumber) +
          ".pdf";
 }
 
-function viewResult() {
-  var pdfUrl = getPdfUrl();
+async function checkPdfExists(pdfUrl) {
+  try {
+    const response = await fetch(pdfUrl, {
+      method: "HEAD",
+      cache: "no-store"
+    });
+
+    return response.ok;
+  } catch (error) {
+    return false;
+  }
+}
+
+async function viewResult() {
+  const pdfUrl = getPdfUrl();
 
   if (pdfUrl === null) {
+    return;
+  }
+
+  setLoading(true);
+  showMessage("");
+
+  const exists = await checkPdfExists(pdfUrl);
+
+  setLoading(false);
+
+  if (!exists) {
+    showMessage("لم يتم العثور على النتيجة أو تعذر الاتصال بالخادم", "red");
     return;
   }
 
@@ -168,20 +239,36 @@ function viewResult() {
 }
 
 function backToMain() {
-  document.getElementById("pdfPage").style.display = "none";
   document.getElementById("pdfViewer").src = "";
+  document.getElementById("pdfPage").style.display = "none";
   document.getElementById("mainPage").style.display = "block";
 }
 
-function downloadResult() {
-  var pdfUrl = getPdfUrl();
+async function downloadResult() {
+  const pdfUrl = getPdfUrl();
 
   if (pdfUrl === null) {
     return;
   }
 
+  setLoading(true);
+  showMessage("");
+
+  const exists = await checkPdfExists(pdfUrl);
+
+  setLoading(false);
+
+  if (!exists) {
+    showMessage("لم يتم العثور على ملف النتيجة", "red");
+    return;
+  }
+
   window.open(pdfUrl, "_blank");
 }
+
+window.addEventListener("offline", function () {
+  showMessage("لا يوجد اتصال بالإنترنت", "red");
+});
 </script>
 
 </body>
