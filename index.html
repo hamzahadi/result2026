@@ -179,17 +179,17 @@ function getStudentNumber() {
   const number = studentInput.value.trim();
 
   if (number === "") {
-    showMessage("يرجى إدخال رقم الطالب", "red");
+    showMessage("يرجى إدخال الرقم السري للطالب", "red");
     return null;
   }
 
   if (!/^[0-9]+$/.test(number)) {
-    showMessage("رقم الطالب يجب أن يحتوي على أرقام فقط", "red");
+    showMessage("رقم الطالب السري يجب أن يحتوي على أرقام فقط", "red");
     return null;
   }
 
   if (number.length !== 13) {
-    showMessage("رقم الطالب يجب أن يتكون من 13 رقماً", "red");
+    showMessage("رقم الطالب السري يجب أن يتكون من 10 رقماً", "red");
     return null;
   }
 
